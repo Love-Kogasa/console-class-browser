@@ -40,7 +40,15 @@ function Console(stdoutOrOption = {}, stderr) {
 }
 Console.prototype = {
   log(...text) {
-    this.stdout.write(format(...text) + "\n")
+    var needFormat = true
+    text = text.map(inspectAll)
+    this.stdout.write((needFormat ? format(...text) : text.join(" ")) + "\n")
+    function inspectAll(value) {
+      if(typeof value !== "string") {
+        needFormat && (needFormat = false)
+        return inspect(value)
+      } else return value
+    }
   },
   error(...text) {
     this.stderr.write(format(...text) + "\n")

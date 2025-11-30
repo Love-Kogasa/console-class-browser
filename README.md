@@ -28,6 +28,7 @@ console.timeEnd("Time")
 console.count("Count")
 console.count("Count")
 console.countReset("Count")
+console.log({key: "value"}, "Hello", "World")
 console.dir(console, {depth: 0})
 ```
 
