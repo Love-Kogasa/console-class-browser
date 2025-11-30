@@ -80,7 +80,7 @@ var stderr = new console.BrowserStderr()
 
 Thank you for reading. PRs are welcome!
 
-# chinese\:console-class-browser
+# chinese:console-class-browser
 本模块实现了Nodejs的console模块)  
 起因是我在尝试在前端模拟shell时候发现console-browserify没有实现Console类  
 本来想提一个pr的，但是要我改的话可能就要大变动了，八成可能会被拒绝，因此我就花几个小时重写了这个模块

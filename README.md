@@ -1,5 +1,5 @@
 # console-class-browser
-[简体中文](#chinese:console-class-browser)  
+[简体中文](#consoleClass-browser)  
 This module implements the Node.js `console` module for browser environments.  
 The motivation came from my attempt to simulate a shell in the frontend, where I found that `console-browserify` did not implement the `Console` class.  
 I originally considered submitting a PR, but the changes required would likely be extensive and might be rejected. Therefore, I spent a few hours rewriting this module.
@@ -80,7 +80,7 @@ var stderr = new console.BrowserStderr()
 
 Thank you for reading. PRs are welcome!
 
-# chinese:console-class-browser
+# consoleClass-browser
 本模块实现了Nodejs的console模块)  
 起因是我在尝试在前端模拟shell时候发现console-browserify没有实现Console类  
 本来想提一个pr的，但是要我改的话可能就要大变动了，八成可能会被拒绝，因此我就花几个小时重写了这个模块
