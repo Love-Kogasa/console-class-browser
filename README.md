@@ -1,0 +1,158 @@
+# console-class-browser
+[简体中文](#console-class-browser.)
+This module implements the Node.js `console` module for browser environments.  
+The motivation came from my attempt to simulate a shell in the frontend, where I found that `console-browserify` did not implement the `Console` class.  
+I originally considered submitting a PR, but the changes required would likely be extensive and might be rejected. Therefore, I spent a few hours rewriting this module.
+
+# Usage
+
+The usage of this module is mostly the same as the Node.js standard library, with some minor differences.  
+A simple example (`test.js`):
+
+```js
+const console = require("console-class-browser")
+
+console.log("Hello %s", "World")
+console.info("Hello %s", "World")
+console.debug("Hello %s", "World")
+console.dirxml("Hello %s", "World")
+console.table("Hello %s", "World")
+console.warn("Hello %s", "World")
+
+console.error("Bye %s", "Bug")
+console.trace("Bye %s", "Bug")
+console.assert(true, "Hello %s", "World")
+console.time("Time")
+console.timeLog("Time")
+console.timeEnd("Time")
+console.count("Count")
+console.count("Count")
+console.countReset("Count")
+console.dir(console, {depth: 0})
+```
+
+Example using the `Console` class:
+
+```js
+// If you have your own stdout or stderr
+var myConsole = new console.Console(stdout, stderr)
+myConsole.log("Hello World")
+```
+
+*TIP*: It is recommended that `stdout` and `stderr` be Node.js writable stream objects. In practice, they can be any object containing a `write` method. If you want to use `console.clear`, the `stdout` should also implement a `clear` method.
+
+`BrowserStdout` and `BrowserStderr` (simulating stderr and stdout in the browser):
+
+```js
+console.stdout // Pre-instantiated stdout
+console.stderr // Pre-instantiated stderr
+// You can also instantiate your own
+var stdout = new console.BrowserStdout()
+var stderr = new console.BrowserStderr()
+```
+
+**This module implements the following methods (excluding details that differ from the console module):**
+- label
+- info
+- warn
+- table
+- group
+- groupEnd
+- groupCollapsed
+- dirxml
+- trace
+- profile
+- profileEnd
+- timeStamp
+- debug
+- log
+- error
+- assert
+- clear
+- dir
+- count
+- countReset
+- time
+- timeLog
+- timeEnd
+- Console  
+*Some methods are implemented as empty functions.*
+
+Thank you for reading. PRs are welcome!
+
+# console-class-browser.
+本模块实现了Nodejs的console模块)  
+起因是我在尝试在前端模拟shell时候发现console-browserify没有实现Console类  
+本来想提一个pr的，但是要我改的话可能就要大变动了，八成可能会被拒绝，因此我就花几个小时重写了这个模块
+
+# Usage
+本模块用法与Node标准库基本相同，细节有不同  
+一个简单的示例(test.js)
+```js
+const console = require("console-class-browser")
+
+console.log("Hello %s", "World")
+console.info("Hello %s", "World")
+console.debug("Hello %s", "World")
+console.dirxml("Hello %s", "World")
+console.table("Hello %s", "World")
+console.warn("Hello %s", "World")
+
+console.error("Bye %s", "Bug")
+console.trace("Bye %s", "Bug")
+console.assert(true, "Hello %s", "World")
+console.time("Time")
+console.timeLog("Time")
+console.timeEnd("Time")
+console.count("Count")
+console.count("Count")
+console.countReset("Count")
+console.dir(console, {depth: 0})
+```
+
+Console类示例
+```js
+// 如果你有自己的stdout或stderr
+var myConsole = new console.Console(stdout, stderr)
+myConsole.log("Hello World")
+```
+
+*TIP*: 建议stdout和stderr是一个nodejs的可写流对象，实际上可以是任何包含write方法的对象，如果希望console.clear还需要在stdout上实现clear方法
+
+BrowserStdout和BrowserStderr(在浏览器上模拟stderr和stdout)
+```js
+console.stdout // 已经实例化的stdout
+console.stderr // 已经实例化的stderr
+// 也可以自己实例化一个
+var stdout = new console.BrowserStdout()
+var stderr = new console.BrowserStderr()
+```
+
+**本模块实现了以下方法(不包括与console模块不同的细节)**
+- label
+- info
+- warn
+- table
+- group
+- groupEnd
+- groupCollapsed
+- dirxml
+- trace
+- profile
+- profileEnd
+- timeStamp
+- debug
+- log
+- error
+- assert
+- clear
+- dir
+- count
+- countReset
+- time
+- timeLog
+- timeEnd
+- Console
+*部分方法使用空函数实现*
+
+感谢阅读，欢迎pr补充)
