@@ -30,10 +30,10 @@ const native = [
 
 function Console(stdout = {}, stderr) {
   this.label = {time: {}, count: {}}
+  this.inspectOption = stdout.inspectOptions || {}
+  this.indentNumber = stdout.groupIndentation || 2
+  this.indent = 0
   if(!(typeof stdout.write === "function")) {
-    this.inspectOption = stdout.inspectOptions || {}
-    this.indentNumber = stdout.groupIndentation || 2
-    this.indent = 0
     this.stdout = stdout.stdout || new BrowserStdout()
     this.stderr = (stdout.stderr || stdout.stdout) || new BrowserStderr()
   } else {
