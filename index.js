@@ -17,7 +17,7 @@ class BrowserStderr extends Writable {
 }
 
 const simpleLogList = [
-  "Linfo", "Lwarn", "Ltable", "Ldirxml", "Etrace", "Ldebug", "GgroupCollapsed", "NcreateTask"
+  "Linfo", "Lwarn", "Ltable", "Ldirxml", "Ldebug", "GgroupCollapsed", "NcreateTask"
 ]
 
 const symbolTable = {
@@ -67,6 +67,12 @@ Console.prototype = {
   },
   error(...text) {
     this.stderr.write(this._log(...text))
+  },
+  trace(...text) {
+    var trace = new Error()
+    trace.name = "Trace"
+    trace.message = this._log(...text)
+    this.error(trace)
   },
   empty() {},
   assert(value, ...message) {
