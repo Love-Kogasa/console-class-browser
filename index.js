@@ -58,7 +58,9 @@ Console.prototype = {
     function inspectAll(value) {
       if(typeof value !== "string") {
         needFormat && (needFormat = false)
-        return inspect(value)
+        if(typeof value === "object" && value.stack) {
+          return value.stack
+        } else return inspect(value)
       } else return value
     }
   },
