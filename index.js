@@ -4,45 +4,57 @@ const {format, inspect} = require("util")
 class BrowserStdout extends Writable {
   clear = console.clear
   _write(chunk, encoding, callback) {
-    console.log(Buffer.from(chunk, encoding).toString().trim())
+    console.log(Buffer.from(chunk, encoding).toString().slice(0, -1))
     callback()
   }
 }
 
 class BrowserStderr extends Writable {
   _write(chunk, encoding, callback) {
-    console.error(Buffer.from(chunk, encoding).toString().trim())
+    console.error(Buffer.from(chunk, encoding).toString().slice(0, -1))
     callback()
   }
 }
 
 const simpleLogList = [
-  "Linfo", "Lwarn", "Ltable", "Ngroup", "NgroupEnd", "NgroupCollapsed", "Ldirxml", "Etrace", "Nprofile", "NprofileEnd", "NtimeStamp", "Ldebug"
+  "Linfo", "Lwarn", "Ltable", "Ldirxml", "Etrace", "Ldebug", "GgroupCollapsed", "NcreateTask"
 ]
 
 const symbolTable = {
-  "L": "log", "E": "error", "N": "empty"
+  "L": "log", "E": "error", "G": "group", "N": "empty"
 }
 
-function Console(stdoutOrOption = {}, stderr) {
+const native = [
+  "profile", "profileEnd", "timeStamp"
+]
+
+function Console(stdout = {}, stderr) {
   this.label = {time: {}, count: {}}
-  if(!(typeof stdoutOrOption.write === "function")) {
-    this.inspectOption = stdoutOrOption.inspectOptions || {}
-    this.stdout = stdoutOrOption.stdout || new BrowserStdout()
-    this.stderr = (stdoutOrOption.stderr || stdoutOrOption.stdout) || new BrowserStderr()
+  if(!(typeof stdout.write === "function")) {
+    this.inspectOption = stdout.inspectOptions || {}
+    this.indentNumber = stdout.groupIndentation || 2
+    this.indent = 0
+    this.stdout = stdout.stdout || new BrowserStdout()
+    this.stderr = (stdout.stderr || stdout.stdout) || new BrowserStderr()
   } else {
-    this.stdout = stdoutOrOption || new BrowserStdout()
-    this.stderr = (stderr || stdoutOrOption) || new BrowserStdout()
+    this.stdout = stdout || new BrowserStdout()
+    this.stderr = (stderr || stdout) || new BrowserStdout()
   }
+  for(let func of native)
+    this[func] = console[func]
   for(let func of simpleLogList) {
     this[func.slice(1)] = this[symbolTable[func[0]]]
   }
 }
 Console.prototype = {
-  log(...text) {
+  _log(...text) {
     var needFormat = true
     text = text.map(inspectAll)
-    this.stdout.write((needFormat ? format(...text) : text.join(" ")) + "\n")
+    var output = needFormat ? format(...text) : text.join(" ")
+    output = output.split("\n").
+      map(line => line.padStart(line.length + this.indent, " "))
+      .join("\n")
+    return output + "\n"
     function inspectAll(value) {
       if(typeof value !== "string") {
         needFormat && (needFormat = false)
@@ -50,8 +62,11 @@ Console.prototype = {
       } else return value
     }
   },
+  log(...text) {
+    this.stdout.write(this._log(...text))
+  },
   error(...text) {
-    this.stderr.write(format(...text) + "\n")
+    this.stderr.write(this._log(...text))
   },
   empty() {},
   assert(value, ...message) {
@@ -81,6 +96,13 @@ Console.prototype = {
   timeEnd(label="default") {
     this.timeLog(label)
     delete this.label.time[label]
+  },
+  group(...text) {
+    this.log(...text)
+    this.indent += this.indentNumber
+  },
+  groupEnd() {
+    this.indent -= this.indentNumber
   }
 }
 Console.prototype.Console = Console
