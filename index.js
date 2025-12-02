@@ -50,11 +50,7 @@ Console.prototype = {
   _log(...text) {
     var needFormat = true
     text = text.map(inspectAll)
-    var output = needFormat ? format(...text) : text.join(" ")
-    output = output.split("\n").
-      map(line => line.padStart(line.length + this.indent, " "))
-      .join("\n")
-    return output + "\n"
+    return needFormat ? format(...text) : text.join(" ")
     function inspectAll(value) {
       if(typeof value !== "string") {
         needFormat && (needFormat = false)
@@ -64,11 +60,16 @@ Console.prototype = {
       } else return value
     }
   },
+  _indent(text) {
+    return text = text.split("\n").
+      map(line => line.padStart(line.length + this.indent, " "))
+      .join("\n") + "\n"
+  },
   log(...text) {
-    this.stdout.write(this._log(...text))
+    this.stdout.write(this._indent(this._log(...text)))
   },
   error(...text) {
-    this.stderr.write(this._log(...text))
+    this.stderr.write(this._indent(this._log(...text)))
   },
   trace(...text) {
     var trace = new Error()

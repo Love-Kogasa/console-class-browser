@@ -1,6 +1,6 @@
 {
   "name": "console-class-browser",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "This module implements the Node.js `console` module for browser environments.",
   "keywords": [
     "browserify",
